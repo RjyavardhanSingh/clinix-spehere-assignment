@@ -1,17 +1,21 @@
-import express from "express"
-import { createPrescription, getPrescriptions }  from '../controllers/prescriptionController.js';
-import {verifyToken} from "../middlewares/auth.js"
-import { checkRole }  from '../middlewares/roleCheck.js';
+import express from "express";
+import { verifyToken } from "../middlewares/auth.js";
+import { checkRole } from "../middlewares/roleCheck.js";
+import {
+  createPrescription,
+  getPrescriptionsByAppointmentId,
+} from "../controllers/prescriptionController.js";
+
 const router = express.Router();
 
-// Middleware to verify token and check roles
+// Apply middlewares
 router.use(verifyToken);
-router.use(checkRole(['Doctor', 'Patient']));
 
-// Route to create a prescription
-router.post('/', checkRole(['Doctor']), createPrescription);
+// Create a prescription - only doctors can create prescriptions
+router.post("/", checkRole(["Doctor"]), createPrescription);
 
-// Route to get prescriptions by appointment ID
-router.get('/:appointmentId', getPrescriptions);
+// Get prescriptions for a specific appointment
+// FIX: Make sure the parameter name is provided after the colon
+router.get("/:appointmentId", getPrescriptionsByAppointmentId);
 
 export default router;
