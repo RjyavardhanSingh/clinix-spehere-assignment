@@ -1,11 +1,14 @@
-import { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { API } from "../config/api"; // Import the API config
 
 export const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -21,7 +24,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      const response = await axios.post("http://localhost:5000/auth/login", {
+      const response = await axios.post(API.auth.login, {
         username,
         password,
       });
@@ -34,20 +37,27 @@ export const AuthProvider = ({ children }) => {
       setUser(user);
       return user;
     } catch (error) {
-      throw error.response?.data || { message: "Login failed" };
+      throw (
+        error.response?.data || { message: error.message || "Login failed" }
+      );
     }
   };
 
   const register = async (username, password, role) => {
     try {
-      await axios.post("http://localhost:5000/auth/register", {
+      const response = await axios.post(API.auth.register, {
         username,
         password,
         role,
       });
-      return true;
+
+      return response.data;
     } catch (error) {
-      throw error.response?.data || { message: "Registration failed" };
+      throw (
+        error.response?.data || {
+          message: error.message || "Registration failed",
+        }
+      );
     }
   };
 
@@ -63,4 +73,4 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-};
+}

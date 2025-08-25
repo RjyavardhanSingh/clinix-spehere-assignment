@@ -13,6 +13,7 @@ import { Link, useRouter } from "expo-router";
 import { AuthContext } from "../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { API } from "../../config/api"; // Import the API config
 
 export default function LoginScreen() {
   const [username, setUsername] = useState("");
@@ -30,12 +31,10 @@ export default function LoginScreen() {
     setIsLoading(true);
     console.log("Attempting login with:", { username });
 
-    const apiUrl = "http://192.168.0.12:5000";
-
     try {
-      console.log(`Attempting fetch to ${apiUrl}/auth/login`);
+      console.log(`Attempting fetch to ${API.auth.login}`);
 
-      const response = await fetch(`${apiUrl}/auth/login`, {
+      const response = await fetch(API.auth.login, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

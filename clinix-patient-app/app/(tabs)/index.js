@@ -8,16 +8,13 @@ import {
   RefreshControl,
   TouchableOpacity,
   Alert,
-  Modal,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../../context/AuthContext";
 import PrescriptionView from "../../components/PrescriptionView";
-
-// Update API_URL to use your IP address
-const API_URL = "http://192.168.0.12:5000";
+import { API } from "../../config/api"; // Import the API config
 
 export default function AppointmentsScreen() {
   const { user } = useContext(AuthContext);
@@ -28,7 +25,7 @@ export default function AppointmentsScreen() {
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [prescriptionLoading, setPrescriptionLoading] = useState(false);
 
-  // Update only the fetchPrescription function with the correct API endpoint
+  // Fetch prescription by appointment ID
   const fetchPrescription = async (appointmentId) => {
     if (!appointmentId) {
       console.log("No appointment ID provided");
@@ -46,9 +43,8 @@ export default function AppointmentsScreen() {
 
       console.log(`Fetching prescription for appointment: ${appointmentId}`);
 
-      // Use the correct API endpoint format
       const response = await axios.get(
-        `${API_URL}/prescriptions/${appointmentId}`,
+        API.prescriptions.getByAppointment(appointmentId),
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -130,7 +126,7 @@ export default function AppointmentsScreen() {
 
       try {
         // Make API call with properly formatted auth header
-        const response = await axios.get(`${API_URL}/appointments`, {
+        const response = await axios.get(API.appointments.base, {
           headers: {
             Authorization: authToken,
           },

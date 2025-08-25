@@ -9,7 +9,6 @@ import {
   Alert,
   TextInput,
   Modal,
-  Platform,
 } from "react-native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -17,6 +16,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { FontAwesome } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
+import { API } from "../../config/api"; // Import the API config
 
 // Update API URL to use your machine's IP address instead of 10.0.2.2
 const API_URL = "http://192.168.0.12:5000";
@@ -48,8 +48,11 @@ export default function ExploreScreen() {
     fetchDoctors();
   }, []);
 
+  // Fetch doctors
   const fetchDoctors = async () => {
     try {
+      setLoading(true);
+
       if (!user) {
         console.log("User is not available yet");
         setLoading(false);
@@ -76,7 +79,7 @@ export default function ExploreScreen() {
       // Ensure token has "Bearer " prefix
       const authToken = token.startsWith("Bearer ") ? token : `Bearer ${token}`;
 
-      const response = await axios.get(`${API_URL}/appointments`, {
+      const response = await axios.get(API.appointments.base, {
         headers: {
           Authorization: authToken,
         },
@@ -121,6 +124,7 @@ export default function ExploreScreen() {
     doctor.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Book appointment
   const handleBookAppointment = async () => {
     if (!time) {
       Alert.alert("Error", "Please select a time slot");
@@ -145,7 +149,7 @@ export default function ExploreScreen() {
 
       // Book the appointment
       const response = await axios.post(
-        `${API_URL}/appointments`,
+        API.appointments.base,
         {
           doctorId: selectedDoctor._id,
           patientId: patientId,

@@ -2,9 +2,7 @@ import React, { createContext, useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useSegments, useRouter } from "expo-router";
-
-// Update API URL to use your machine's IP address
-const API_URL = "http://192.168.0.12:5000";
+import { API } from "../config/api"; // Import the API config
 
 // Create Context
 export const AuthContext = createContext();
@@ -86,9 +84,9 @@ export function AuthProvider({ children }) {
   // Login function
   const login = async (username, password) => {
     try {
-      console.log(`Attempting login to ${API_URL}/auth/login`);
+      console.log(`Attempting login to ${API.auth.login}`);
 
-      const response = await axios.post(`${API_URL}/auth/login`, {
+      const response = await axios.post(API.auth.login, {
         username,
         password,
       });
@@ -128,7 +126,7 @@ export function AuthProvider({ children }) {
         throw new Error("Passwords do not match");
       }
 
-      const response = await axios.post(`${API_URL}/auth/register`, {
+      const response = await axios.post(API.auth.register, {
         username,
         password,
         role: "Patient", // Force role to be Patient for mobile app
