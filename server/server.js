@@ -7,9 +7,14 @@ import authRoutes from './routes/authRoutes.js';
 import appointmentRoutes from './routes/appointmentRoutes.js';
 import prescriptionRoutes from './routes/prescriptionRoutes.js';
 
+
+
 dotenv.config();
 
 const app = express();
+app.get('/',(req,res)=>{
+  res.json("Clinix backend is now responding");
+})
 const PORT = process.env.PORT || 5000;
 
 // Middleware
@@ -29,9 +34,7 @@ app.use('/auth', authRoutes);
 app.use('/appointments', appointmentRoutes);
 app.use('/prescriptions', prescriptionRoutes);
 
-app.get('/',()=>{
-  'Clinix backend is responding'
-})
+
 
 // Start server
 app.listen(PORT, () => {
