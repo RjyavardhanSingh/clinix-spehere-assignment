@@ -10,24 +10,25 @@ import prescriptionRoutes from "./routes/prescriptionRoutes.js";
 dotenv.config();
 
 const app = express();
-app.get("/", (req, res) => {
-  res.json("Clinix backend is now responding");
-});
-const PORT = process.env.PORT || 5000;
 
-// Middleware
+// Allow CORS from all origins (for personal project use only)
 app.use(
   cors({
-    origin: [
-      "https://clinix-spehere-assignment.vercel.app",
-      "http://localhost:3000", // For local development
-      "http://localhost:5173", // For Vite's default port
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: "*", // Allow all origins
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
+
+// Handle preflight requests
+app.options("*", cors());
+
 app.use(express.json());
+
+// Simple test route
+app.get("/", (req, res) => {
+  res.json("Clinix backend is now responding");
+});
 
 // Database connection
 connectDB();
@@ -37,7 +38,9 @@ app.use("/auth", authRoutes);
 app.use("/appointments", appointmentRoutes);
 app.use("/prescriptions", prescriptionRoutes);
 
+const PORT = process.env.PORT || 5000;
+
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
