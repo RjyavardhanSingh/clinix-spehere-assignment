@@ -11,36 +11,31 @@ dotenv.config();
 
 const app = express();
 
-// Allow CORS from all origins (for personal project use only)
+// Fix CORS configuration - make sure there's no URL pattern here
 app.use(
   cors({
-    origin: "*", // Allow all origins
+    origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-// Handle preflight requests
-app.options("*", cors());
-
 app.use(express.json());
 
-// Simple test route
+// Simple test route - make sure this is properly formatted
 app.get("/", (req, res) => {
-  res.json("Clinix backend is now responding");
+  res.json({ message: "Clinix backend is responding" });
 });
 
-// Database connection
-connectDB();
-
-// Routes
+// Routes - ensure no URLs are passed here, just path prefixes
 app.use("/auth", authRoutes);
 app.use("/appointments", appointmentRoutes);
 app.use("/prescriptions", prescriptionRoutes);
 
 const PORT = process.env.PORT || 5000;
-
-// Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+// Connect to database
+connectDB();

@@ -8,14 +8,13 @@ import {
 
 const router = express.Router();
 
-// Apply middlewares
+// Apply auth middleware to all routes
 router.use(verifyToken);
 
-// Create a prescription - only doctors can create prescriptions
+// Create a prescription (only doctors)
 router.post("/", checkRole(["Doctor"]), createPrescription);
 
 // Get prescriptions for a specific appointment
-// FIX: Make sure the parameter name is provided after the colon
 router.get("/:appointmentId", getPrescriptionsByAppointmentId);
 
 export default router;
