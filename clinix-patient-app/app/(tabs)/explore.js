@@ -141,11 +141,18 @@ export default function ExploreScreen() {
       const formattedDate = date.toISOString().split("T")[0];
 
       // Make sure we have the right user ID format
-      const patientId = user.id || user._id;
-      if (!patientId) {
+      const userData = await AsyncStorage.getItem("user");
+      if (!userData) {
         Alert.alert("Error", "User information is missing");
         return;
       }
+
+      const parsedUser = JSON.parse(userData);
+      // Use _id consistently for backend compatibility
+      const patientId = parsedUser._id || parsedUser.id;
+
+      console.log("Booking with patientId:", patientId);
+      console.log("Using token:", token.substring(0, 20) + "...");
 
       // Book the appointment
       const response = await axios.post(
@@ -161,7 +168,11 @@ export default function ExploreScreen() {
         }
       );
 
-      console.log("Appointment booked successfully:", response.data);
+      console.log(
+        "Appointment booking response:",
+        response.status,
+        response.data
+      );
 
       // Only show success if we get here (no error was thrown)
       Alert.alert(
@@ -201,7 +212,10 @@ export default function ExploreScreen() {
         );
       }
     } catch (error) {
-      console.error("Error booking appointment:", error);
+      console.error(
+        "Error booking appointment details:",
+        error.response?.data || error.message
+      );
 
       // Show detailed error message
       const errorMessage =

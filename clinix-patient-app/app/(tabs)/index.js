@@ -120,58 +120,57 @@ export default function AppointmentsScreen() {
         return;
       }
 
+      console.log("Fetching appointments for user:", user._id || user.id);
+
       // Make sure to add "Bearer " prefix
       const authToken = token.startsWith("Bearer ") ? token : `Bearer ${token}`;
-      console.log("Using properly formatted token with Bearer prefix");
 
-      try {
-        // Make API call with properly formatted auth header
-        const response = await axios.get(API.appointments.base, {
-          headers: {
-            Authorization: authToken,
-          },
-        });
+      // Make API call with properly formatted auth header
+      const response = await axios.get(API.appointments.base, {
+        headers: {
+          Authorization: authToken,
+        },
+      });
 
-        console.log("Response received, appointments:", response.data.length);
+      console.log("Appointments API response status:", response.status);
+      console.log("Raw appointments data:", response.data);
 
+      if (Array.isArray(response.data) && response.data.length > 0) {
         // Filter appointments for current patient
-        const patientAppointments = response.data.filter((appointment) => {
-          // Check both ID and _ID fields in case backend is inconsistent
-          const patientId =
-            appointment.patientId.id || appointment.patientId._id;
-          const userId = user.id || user._id;
+        const userId = user._id || user.id;
 
-          console.log("Comparing:", patientId, "vs", userId);
-          return patientId === userId;
+        const patientAppointments = response.data.filter((appointment) => {
+          // Handle cases where the response format might vary
+          const appointmentPatientId =
+            appointment.patientId?._id ||
+            appointment.patientId?.id ||
+            appointment.patientId;
+
+          console.log(
+            `Comparing appointment ${appointment._id}: ${appointmentPatientId} vs user ${userId}`
+          );
+
+          // Try string comparison if direct comparison fails
+          return (
+            appointmentPatientId === userId ||
+            appointmentPatientId?.toString() === userId?.toString()
+          );
         });
 
+        console.log(
+          `Found ${patientAppointments.length} appointments for this user`
+        );
         setAppointments(patientAppointments);
-      } catch (error) {
-        console.error("Error fetching appointments:", error);
-
-        // For demo purposes, generate sample appointments
-        const sampleAppointments = [
-          {
-            _id: "1",
-            doctorId: { _id: "1", username: "Dr. John Smith" },
-            patientId: { _id: user.id, username: user.username },
-            date: new Date().toISOString(),
-            time: "10:00 AM",
-            status: "Pending",
-          },
-          {
-            _id: "2",
-            doctorId: { _id: "2", username: "Dr. Sarah Johnson" },
-            patientId: { _id: user.id, username: user.username },
-            date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days ago
-            time: "02:30 PM",
-            status: "Completed",
-          },
-        ];
-
-        console.log("Using sample appointment data");
-        setAppointments(sampleAppointments);
+      } else {
+        console.log("No appointments found or invalid response format");
+        setAppointments([]);
       }
+    } catch (error) {
+      console.error(
+        "Error fetching appointments:",
+        error.response?.data || error.message
+      );
+      setAppointments([]);
     } finally {
       setLoading(false);
       setRefreshing(false);
