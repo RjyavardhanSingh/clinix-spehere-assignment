@@ -30,6 +30,10 @@ app.use('/auth', authRoutes);
 app.use('/appointments', appointmentRoutes);
 app.use('/prescriptions', prescriptionRoutes);
 
+app.get('/',()=>{
+  'Clinix backend is responding'
+})
+
 // Start server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
