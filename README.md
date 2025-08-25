@@ -186,13 +186,21 @@ curl -i http://localhost:5000/api/health || curl -i $VITE_API_URL/api/health
 - Keep API base URLs in a single config file per client (`client/config/api.js`, `clinix-patient-app/config/api.js`).
 - Normalize user id fields on the client (support both `user._id` and `user.id`).
 
-## Screenshots & video
+## video for mobile
 
-Add screenshots and a short walkthrough video here (placeholder):
 
-![screenshot-placeholder](assets/screenshot.png)
+<video controls width="720">
+  <source src="https://drive.google.com/uc?export=download&id=1_HFDznk-DGIY1F_8BJm5j0SWzbcXl2mn" type="video/mp4">
+  Your browser does not support the video tag. You can watch the video here:
+  <a href="https://drive.google.com/file/d/1_HFDznk-DGIY1F_8BJm5j0SWzbcXl2mn/view?usp=sharing">Video on Google Drive</a>
+</video>
 
-Video: [Add link to demo video]
+**Note:**
+
+- GitHub strips or sanitizes some HTML in READMEs for security. If the above video does not appear or play in the GitHub README, use one of these alternatives:
+  - Host the MP4 inside the repository (e.g., `assets/demo.mp4`) and use a relative `<video>` tag to play it.
+  - Upload the video to YouTube or a video hosting service and include a preview image or link (YouTube embeds are not guaranteed in README either).
+  - Publish the README as a GitHub Pages site (Pages can contain full HTML and will reliably play embedded videos).
 
 ## License
 
