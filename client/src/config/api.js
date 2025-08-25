@@ -27,7 +27,7 @@ export const API = {
   appointments: {
     base: `${BASE_URL}/appointments`,
     getById: (id) => `${BASE_URL}/appointments/${id}`,
-    update: (id) => `${BASE_URL}/appointments/${id}`,
+    update: (id) => `${BASE_URL}/appointments/${id}`, // This route is correct, but method needs to change
   },
   prescriptions: {
     base: `${BASE_URL}/prescriptions`,

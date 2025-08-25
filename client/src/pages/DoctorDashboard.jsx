@@ -45,7 +45,8 @@ const DoctorDashboard = () => {
   const handleStatusUpdate = async (appointmentId, status) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.put(
+      await axios.patch(
+        // Changed from PUT to PATCH to match server route
         API.appointments.update(appointmentId),
         { status },
         {
