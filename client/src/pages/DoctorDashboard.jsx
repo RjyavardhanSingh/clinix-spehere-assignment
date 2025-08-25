@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
-import "./DoctorDashboard.css";
 import { API } from "../config/api"; // Import the API config
 
 const DoctorDashboard = () => {
